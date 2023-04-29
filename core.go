@@ -183,6 +183,8 @@ func (c *CbrClient) Get(ctx context.Context, query string) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("failed to create request '%s': %v", query, err)
 	}
+	req.Header.Add("Accept", `text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8`)
+	req.Header.Add("User-Agent", `Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/112.0`)
 	req.Header.Add("Connection", "close")
 
 	resp, err := c.client.Do(req)

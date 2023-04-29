@@ -147,6 +147,13 @@ func worker(wg *sync.WaitGroup, ctx context.Context, query *ExchRateQuery,
 	logger.Debug(fmt.Sprintf("[%s] received an answer: %s", query, answer))
 
 	decoder := newCbrDecoder(answer)
+	if !decoder.isValid {
+		logger.Error(fmt.Sprintf("[%s] failed, received incorrect answer: %s", query, answer))
+
+		fmt.Printf("response to request %q was not decoded, received incorrect answer:\n%s\n", query, answer)
+		return
+	}
+
 	result := CbrResult{}
 	if err = decoder.Decode(&result); err != nil {
 		logger.Error(fmt.Sprintf("[%s] decoding failed: %v", query, err))

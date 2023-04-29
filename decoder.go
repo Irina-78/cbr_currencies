@@ -11,9 +11,17 @@ import (
 
 type CbrDecoder struct {
 	xml.Decoder
+	isValid bool
 }
 
 func newCbrDecoder(inStr string) *CbrDecoder {
+	if !strings.HasPrefix(inStr, "<?xml") {
+		return &CbrDecoder{
+			Decoder: *xml.NewDecoder(strings.NewReader("")),
+			isValid: false,
+		}
+	}
+
 	inStr = strings.Replace(inStr, ",", ".", -1)
 
 	decoder := xml.NewDecoder(strings.NewReader(inStr))
@@ -27,5 +35,8 @@ func newCbrDecoder(inStr string) *CbrDecoder {
 		}
 	}
 
-	return &CbrDecoder{*decoder}
+	return &CbrDecoder{
+		Decoder: *decoder,
+		isValid: true,
+	}
 }
